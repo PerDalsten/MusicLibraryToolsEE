@@ -26,6 +26,30 @@ public class Song {
 		this.disc = disc;
 	}
 
+	public String getArtist() {
+		return artist;
+	}
+
+	public String getAlbum() {
+		return album;
+	}
+
+	public Integer getYear() {
+		return year;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public Integer getTrack() {
+		return track;
+	}
+
+	public Integer getDisc() {
+		return disc;
+	}
+
 	@Override
 	public String toString() {
 		return String.join(", ", artist, album, year == null ? null : year.toString(), title,

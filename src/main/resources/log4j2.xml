@@ -23,12 +23,16 @@
 	</Appenders>
 
 	<Loggers>
-		<Root level="ERROR">
+		<Root level="DEBUG">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="File" />
 		</Root>
 
 		<Logger name="dk.purplegreen.musiclibrary" level="DEBUG" additivity="false">
+			<AppenderRef ref="File" />
+		</Logger>
+		
+		<Logger name="org.ehcache" level="DEBUG" additivity="false">
 			<AppenderRef ref="File" />
 		</Logger>
 	</Loggers>
