@@ -29,8 +29,6 @@ import org.apache.logging.log4j.Logger;
 
 @Singleton
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
-// @CacheDefaults
-
 public class SongCreator {
 
 	private static final Logger log = LogManager.getLogger(SongCreator.class);
@@ -76,15 +74,22 @@ public class SongCreator {
 					ResultSet rsSelectArtist = stmtSelectArtist.executeQuery();
 					if (rsSelectArtist.next()) {
 						artistId = rsSelectArtist.getInt("id");
-						log.info("Got artist id: " + artistId + " from database");
-					} else {
-						// Create
-						// artistId =
+						artistCache.put(song.getArtist(), artistId);
 					}
-					artistCache.put(song.getArtist(), artistId);
 				}
-			} else
-				log.info("Got artist id: " + artistId + " from cache");
+			}
+			if (artistId == null) {
+				try (PreparedStatement stmtInsertArtist = con.prepareStatement(INSERT_ARTIST_SQL,
+						Statement.RETURN_GENERATED_KEYS)) {
+					stmtInsertArtist.setString(1, song.getArtist());
+
+					ResultSet rsInsertArtist = stmtInsertArtist.getGeneratedKeys();
+					if (rsInsertArtist.next()) {
+						artistId = rsInsertArtist.getInt(1);
+						artistCache.put(song.getArtist(), artistId);
+					}
+				}
+			}
 
 			String albumKey = artistId + "@" + song.getAlbum();
 			Integer albumId = albumCache.get(albumKey);
@@ -92,20 +97,28 @@ public class SongCreator {
 				try (PreparedStatement stmtSelectAlbum = con.prepareStatement(SELECT_ALBUM_SQL)) {
 					stmtSelectAlbum.setInt(1, artistId);
 					stmtSelectAlbum.setString(2, song.getAlbum());
+
 					ResultSet rsSelectAlbum = stmtSelectAlbum.executeQuery();
 					if (rsSelectAlbum.next()) {
 						albumId = rsSelectAlbum.getInt("id");
-						log.info("Got album id: " + albumId + " from database");
-					} else {
-						// Create
-						// albumId =
+						albumCache.put(albumKey, albumId);
 					}
-					log.info("Add to albumCache: " + albumKey + ":" + albumId);
-
-					albumCache.put(albumKey, albumId);
 				}
-			} else
-				log.info("Got album id: " + albumId + " from cache");
+			}
+			if (albumId == null) {
+				try (PreparedStatement stmtInsertAlbum = con.prepareStatement(INSERT_ALBUM_SQL,
+						Statement.RETURN_GENERATED_KEYS)) {
+					stmtInsertAlbum.setInt(1, artistId);
+					stmtInsertAlbum.setString(2, song.getAlbum());
+					stmtInsertAlbum.setInt(3, song.getYear());
+
+					ResultSet rsInsertAlbum = stmtInsertAlbum.executeQuery();
+					if (rsInsertAlbum.next()) {
+						albumId = rsInsertAlbum.getInt(1);
+						albumCache.put(albumKey, albumId);
+					}
+				}
+			}
 
 			// Create song
 			try (PreparedStatement stmtInsertSong = con.prepareStatement(INSERT_SONG_SQL,
@@ -124,8 +137,7 @@ public class SongCreator {
 
 		} catch (SQLException e) {
 			log.error("Database error: ", e);
-			//XXX
-			return -1;
+			throw new IllegalStateException("Database error while creating song",e);
 		}
 	}
 }
