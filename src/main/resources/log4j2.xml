@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="ERROR">
+
+	<Properties>
+		<Property name="dk.purplegreen.logdir">logs</Property>
+	</Properties>
+
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d [%t] %p %c{1.} - %m%n" />
+		</Console>
+
+		<RollingFile name="File" fileName="${sys:dk.purplegreen.logdir}/MusicLibraryToolsEE.log"
+			filePattern="${sys:dk.purplegreen.logdir}/MusicLibraryToolsEE-%i.log.zip">
+			<PatternLayout>
+				<Pattern>%d [%t] %p %c{1.} - %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<Root level="ERROR">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="File" />
+		</Root>
+
+		<Logger name="dk.purplegreen.musiclibrary" level="DEBUG" additivity="false">
+			<AppenderRef ref="File" />
+		</Logger>
+	</Loggers>
+
+</Configuration>
