@@ -61,7 +61,7 @@ public class SongCreator {
 	@Lock(LockType.WRITE)
 	public Integer createSong(@Valid Song song) {
 
-		log.info("Creating song: " + song);
+		log.debug("Creating song: " + song);
 
 		Integer result = null;
 
@@ -75,18 +75,23 @@ public class SongCreator {
 					if (rsSelectArtist.next()) {
 						artistId = rsSelectArtist.getInt("id");
 						artistCache.put(song.getArtist(), artistId);
+						log.debug("Retrieved artist " + song.getArtist() + " from database");
 					}
 				}
+			} else {
+				log.debug("Retrieved artist " + song.getArtist() + " from cache");
 			}
 			if (artistId == null) {
 				try (PreparedStatement stmtInsertArtist = con.prepareStatement(INSERT_ARTIST_SQL,
 						Statement.RETURN_GENERATED_KEYS)) {
 					stmtInsertArtist.setString(1, song.getArtist());
 
+					stmtInsertArtist.executeQuery();
 					ResultSet rsInsertArtist = stmtInsertArtist.getGeneratedKeys();
 					if (rsInsertArtist.next()) {
 						artistId = rsInsertArtist.getInt(1);
 						artistCache.put(song.getArtist(), artistId);
+						log.info("Inserted artist " + song.getArtist() + " into database with id: " + artistId);
 					}
 				}
 			}
@@ -104,6 +109,8 @@ public class SongCreator {
 						albumCache.put(albumKey, albumId);
 					}
 				}
+			} else {
+				log.debug("Retrieved album " + song.getAlbum() + " from cache");
 			}
 			if (albumId == null) {
 				try (PreparedStatement stmtInsertAlbum = con.prepareStatement(INSERT_ALBUM_SQL,
@@ -112,10 +119,12 @@ public class SongCreator {
 					stmtInsertAlbum.setString(2, song.getAlbum());
 					stmtInsertAlbum.setInt(3, song.getYear());
 
-					ResultSet rsInsertAlbum = stmtInsertAlbum.executeQuery();
+					stmtInsertAlbum.executeUpdate();
+					ResultSet rsInsertAlbum = stmtInsertAlbum.getGeneratedKeys();
 					if (rsInsertAlbum.next()) {
 						albumId = rsInsertAlbum.getInt(1);
 						albumCache.put(albumKey, albumId);
+						log.info("Inserted album " + song.getAlbum() + " into database with id: " + albumId);
 					}
 				}
 			}
@@ -127,17 +136,19 @@ public class SongCreator {
 				stmtInsertSong.setString(2, song.getTitle());
 				stmtInsertSong.setInt(3, song.getTrack());
 				stmtInsertSong.setInt(4, song.getDisc());
-				stmtInsertSong.executeQuery();
+				stmtInsertSong.executeUpdate();
 				ResultSet rsInsertSong = stmtInsertSong.getGeneratedKeys();
-				if (rsInsertSong.next())
+				if (rsInsertSong.next()) {
 					result = rsInsertSong.getInt(1);
+					log.info("Inserted song " + song.getTitle() + " into database with id: " + result);
+				}
 			}
 
 			return result;
 
 		} catch (SQLException e) {
 			log.error("Database error: ", e);
-			throw new IllegalStateException("Database error while creating song",e);
+			throw new IllegalStateException("Database error while creating song", e);
 		}
 	}
 }
