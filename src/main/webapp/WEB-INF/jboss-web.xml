@@ -8,4 +8,11 @@
 		<res-type>javax.sql.DataSource</res-type>
 		<jndi-name>java:/jdbc/MusicLibraryDS</jndi-name>
 	</resource-ref>
+	
+	<resource-ref>
+		<res-ref-name>jms/ActiveMQConnectionFactory</res-ref-name>
+		<res-type>javax.jms.ConnectionFactory</res-type>
+		<jndi-name>java:/jms/ActiveMQConnectionFactory</jndi-name>
+	</resource-ref>
+	
 </jboss-web>

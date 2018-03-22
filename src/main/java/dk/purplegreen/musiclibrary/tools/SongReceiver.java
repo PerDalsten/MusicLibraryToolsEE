@@ -2,12 +2,17 @@ package dk.purplegreen.musiclibrary.tools;
 
 import java.io.StringReader;
 
+import javax.annotation.Resource;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -26,6 +31,9 @@ public class SongReceiver implements MessageListener {
 	@EJB
 	private SongCreator songCreator;
 
+	@Resource(lookup = "java:comp/env/jms/ActiveMQConnectionFactory")
+	private ConnectionFactory cf;
+
 	@Override
 	public void onMessage(Message message) {
 		try {
@@ -36,8 +44,24 @@ public class SongReceiver implements MessageListener {
 
 				Song song = getSong(songJSON);
 
-				songCreator.createSong(song);
+				Integer id = songCreator.createSong(song);				
 
+				if (message.getJMSReplyTo() != null) {
+
+					String corrId = message.getJMSCorrelationID();
+					try (Connection con = cf.createConnection()) {
+						Session session = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
+						MessageProducer producer = session.createProducer(message.getJMSReplyTo());
+
+						con.start();
+
+						String result = Json.createObjectBuilder().add("id", id).build().toString();
+
+						TextMessage reply = session.createTextMessage(result);
+						reply.setJMSCorrelationID(corrId);
+						producer.send(reply);
+					}
+				}
 			}
 		} catch (Exception e) {
 			log.error("Exception caught: ", e);

@@ -11,4 +11,9 @@
 		<res-auth>Container</res-auth>
 	</resource-ref>
 
+    <resource-ref>
+		<res-ref-name>jms/ActiveMQConnectionFactory</res-ref-name>
+		<res-type>javax.jms.ConnectionFactory</res-type>
+	</resource-ref>
+
 </web-app>
