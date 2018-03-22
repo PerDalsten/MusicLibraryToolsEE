@@ -14,6 +14,5 @@
     <resource-ref>
 		<res-ref-name>jms/ActiveMQConnectionFactory</res-ref-name>
 		<res-type>javax.jms.ConnectionFactory</res-type>
-	</resource-ref>
-
+	</resource-ref>	
 </web-app>

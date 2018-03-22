@@ -19,6 +19,8 @@ WLP:
 
  Wildfly:
  
+ Install ActiveMQ RA as a module (or deploy as application).
+ 
  <subsystem xmlns="urn:jboss:domain:resource-adapters:5.0">
             <resource-adapters>
                 <resource-adapter id="activemq">
@@ -47,3 +49,21 @@ WLP:
                 </resource-adapter>
             </resource-adapters>
         </subsystem>    
+        
+        
+Glassfish:
+ 
+Install RA: 
+  
+~/Development/glassfish4/bin$ ./asadmin deploy --type rar --name activemq ~/Downloads/activemq-rar-5.15.3.rar 
+
+~/Development/glassfish4/bin$ ./asadmin create-resource-adapter-config  --property ServerUrl='tcp\://localhost\:61616' activemq  
+  
+App specific:
+  
+~/Development/glassfish4/bin$ ./asadmin create-connector-connection-pool --raname activemq --connectiondefinition javax.jms.ConnectionFactory --ping true --isconnectvalidatereq true jms/ActiveMQConnectionPool
+
+~/Development/glassfish4/bin$ ./asadmin create-connector-resource --poolname jms/ActiveMQConnectionPool jms/ActiveMQConnectionFactory
+
+~/Development/glassfish4/bin$ ./asadmin create-admin-object --raname activemq --restype javax.jms.Queue --property PhysicalName=MUSICLIBRARY.SONG jms/SongQueue
+        

@@ -86,7 +86,7 @@ public class SongCreator {
 						Statement.RETURN_GENERATED_KEYS)) {
 					stmtInsertArtist.setString(1, song.getArtist());
 
-					stmtInsertArtist.executeQuery();
+					stmtInsertArtist.executeUpdate();
 					ResultSet rsInsertArtist = stmtInsertArtist.getGeneratedKeys();
 					if (rsInsertArtist.next()) {
 						artistId = rsInsertArtist.getInt(1);

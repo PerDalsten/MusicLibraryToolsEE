@@ -44,8 +44,8 @@ public class SongReceiver implements MessageListener {
 
 				Song song = getSong(songJSON);
 
-				Integer id = songCreator.createSong(song);				
-
+				Integer id = songCreator.createSong(song);								
+				
 				if (message.getJMSReplyTo() != null) {
 
 					String corrId = message.getJMSCorrelationID();
