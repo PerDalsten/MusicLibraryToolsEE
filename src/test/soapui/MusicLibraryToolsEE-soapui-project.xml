@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="5f224691-e324-4981-878c-3bd211053b26" activeEnvironment="Default" name="MusicLibraryToolsEE" resourceRoot="${projectDir}" soapui-version="5.4.0" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="57a8212e-84e7-4ddb-a1a9-57a95bc0dc06" wsaVersion="NONE" name="AlbumServiceSOAP" type="wsdl" bindingName="{http://www.purplegreen.dk/albumservice}AlbumServiceSOAP" soapVersion="1_1" anonymous="optional" definition="../../main/wsdl/AlbumService.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/home/per/Projects/MusicLibraryToolsEE/src/main/wsdl/AlbumService.wsdl"><con:part><con:url>file:/home/per/Projects/MusicLibraryToolsEE/src/main/wsdl/AlbumService.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="AlbumService" targetNamespace="http://www.purplegreen.dk/albumservice" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.purplegreen.dk/albumservice" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:albums="http://www.purplegreen.dk/albums">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.purplegreen.dk/albumservice">
+      <xsd:import namespace="http://www.purplegreen.dk/albums" schemaLocation="albums.xsd"></xsd:import>
+      <xsd:element name="GetAlbums">
+        <xsd:complexType/>
+      </xsd:element>
+      <xsd:element name="GetAlbumsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="albums:albums"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="GetAlbumsRequest">
+    <wsdl:part element="tns:GetAlbums" name="in"/>
+  </wsdl:message>
+  <wsdl:message name="GetAlbumsResponse">
+    <wsdl:part element="tns:GetAlbumsResponse" name="out"/>
+  </wsdl:message>
+  <wsdl:portType name="AlbumService">
+    <wsdl:operation name="GetAlbums">
+      <wsdl:input message="tns:GetAlbumsRequest"/>
+      <wsdl:output message="tns:GetAlbumsResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AlbumServiceSOAP" type="tns:AlbumService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetAlbums">
+      <soap:operation soapAction="http://www.purplegreen.dk/albumservice/GetAlbums"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AlbumService">
+    <wsdl:port binding="tns:AlbumServiceSOAP" name="AlbumServiceSOAP">
+      <soap:address location="http://www.purplegreen.dk/albumservice"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>file:/home/per/Projects/MusicLibraryToolsEE/src/main/wsdl/albums.xsd</con:url><con:content><![CDATA[<schema targetNamespace="http://www.purplegreen.dk/albums" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.purplegreen.dk/albums">
+  <complexType name="SongType">
+    <sequence>
+      <element name="track" type="int"/>
+      <element name="title" type="string"/>
+      <element name="disc" type="int"/>
+    </sequence>
+  </complexType>
+  <complexType name="AlbumType">
+    <sequence>
+      <element name="artist" type="string"/>
+      <element name="title" type="string"/>
+      <element name="year" type="int"/>
+      <element name="songs">
+        <complexType>
+          <sequence>
+            <element name="song" type="tns:SongType" minOccurs="1" maxOccurs="unbounded"/>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+  </complexType>
+  <element name="albums">
+    <complexType>
+      <sequence>
+        <element name="album" type="tns:AlbumType" minOccurs="1" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+  </element>
+</schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://viking:8088/mockAlbumServiceSOAP</con:endpoint><con:endpoint>http://www.purplegreen.dk/albumservice</con:endpoint></con:endpoints><con:operation id="a1ffea4f-54ef-4213-9efa-99084587e258" isOneWay="false" action="http://www.purplegreen.dk/albumservice/GetAlbums" name="GetAlbums" bindingOperationName="GetAlbums" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="b004a8fe-4ffe-4414-8baf-b686e333c8e8" name="GetAlbums"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}/AlbumService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:alb="http://www.purplegreen.dk/albumservice">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <alb:GetAlbums/>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.purplegreen.dk/albumservice/GetAlbums"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:mockService id="17950514-5bc9-4e5a-b6f2-c0c87ccee4fc" port="8088" path="/mockAlbumServiceSOAP" host="viking" name="AlbumServiceSOAP MockService"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-action">false</con:setting></con:settings><con:properties/><con:mockOperation name="GetAlbums" id="3382d846-59a6-4348-bfd6-7fccf424d4ee" interface="AlbumServiceSOAP" operation="GetAlbums"><con:settings/><con:defaultResponse>Default</con:defaultResponse><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:response name="Default" id="a9129e81-c4dd-43f4-8686-7798825c53f3" httpResponseStatus="200" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <GetAlbumsResponse xmlns="http://www.purplegreen.dk/albumservice" xmlns:ns2="http://www.purplegreen.dk/albums">
+         <ns2:albums>
+            <ns2:album>
+               <ns2:artist>Judas Priest</ns2:artist>
+               <ns2:title>Stained Class</ns2:title>
+               <ns2:year>1978</ns2:year>
+               <ns2:songs>
+                  <ns2:song>
+                     <ns2:track>1</ns2:track>
+                     <ns2:title>Exciter</ns2:title>
+                     <ns2:disc>1</ns2:disc>
+                  </ns2:song>
+                  <ns2:song>
+                     <ns2:track>2</ns2:track>
+                     <ns2:title>White Heat, Red Hot</ns2:title>
+                     <ns2:disc>1</ns2:disc>
+                  </ns2:song>
+               </ns2:songs>
+            </ns2:album>
+            <ns2:album>
+               <ns2:artist>Van Halen</ns2:artist>
+               <ns2:title>1984</ns2:title>
+               <ns2:year>1984</ns2:year>
+               <ns2:songs>
+                  <ns2:song>
+                     <ns2:track>1</ns2:track>
+                     <ns2:title>1984</ns2:title>
+                     <ns2:disc>1</ns2:disc>
+                  </ns2:song>
+                  <ns2:song>
+                     <ns2:track>2</ns2:track>
+                     <ns2:title>Jump</ns2:title>
+                     <ns2:disc>1</ns2:disc>
+                  </ns2:song>
+               </ns2:songs>
+            </ns2:album>
+            <ns2:album>
+               <ns2:artist>Gasolin</ns2:artist>
+               <ns2:title>Gør det noget</ns2:title>
+               <ns2:year>1977</ns2:year>
+               <ns2:songs>
+                  <ns2:song>
+                     <ns2:track>1</ns2:track>
+                     <ns2:title>Det bedste til mig og mine venner</ns2:title>
+                     <ns2:disc>1</ns2:disc>
+                  </ns2:song>
+                  <ns2:song>
+                     <ns2:track>2</ns2:track>
+                     <ns2:title>Smukke Møller</ns2:title>
+                     <ns2:disc>1</ns2:disc>
+                  </ns2:song>
+                  <ns2:song>
+                     <ns2:track>10</ns2:track>
+                     <ns2:title>Længes hjem</ns2:title>
+                     <ns2:disc>1</ns2:disc>
+                  </ns2:song>
+               </ns2:songs>
+            </ns2:album>
+         </ns2:albums>
+      </GetAlbumsResponse>
+   </soap:Body>
+</soap:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.purplegreen.dk/albumservice/GetAlbums"/></con:response><con:dispatchConfig/></con:mockOperation></con:mockService><con:properties><con:property><con:name>endpoint</con:name><con:value>http://localhost:9080/MusicLibraryToolsEE</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/></con:soapui-project>

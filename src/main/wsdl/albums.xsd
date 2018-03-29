@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.purplegreen.dk/albums"
+	xmlns:tns="http://www.purplegreen.dk/albums" elementFormDefault="qualified">
+
+	<complexType name="SongType">
+		<sequence>
+			<element name="track" type="int"></element>
+			<element name="title" type="string"></element>
+			<element name="disc" type="int"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="AlbumType">
+		<sequence>
+			<element name="artist" type="string"></element>
+			<element name="title" type="string"></element>
+			<element name="year" type="int"></element>
+			<element name="songs">
+				<complexType>
+					<sequence>
+						<element name="song" type="tns:SongType" minOccurs="1" maxOccurs="unbounded"></element>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<element name="albums">
+		<complexType>
+			<sequence>
+				<element name="album" type="tns:AlbumType" minOccurs="1"
+					maxOccurs="unbounded"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+</schema>
