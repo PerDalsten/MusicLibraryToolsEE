@@ -13,12 +13,22 @@ Install (if using web profile instead of full WLP, and not already added):
 
 ./installUtility install jms-2.0
 ./installUtility install mdb-3.2
+./installUtility install wasJmsClient-2.0
 ./installUtility install jaxws-2.2 
-
+	
 mkdir lib/ActiveMQ
 cp /path/to/activemq-rar-5.15.3.rar lib/ActiveMQ/
 
 server.xml:
+
+    <featureManager>
+        <feature>webProfile-7.0</feature>
+        <feature>localConnector-1.0</feature>        
+        <feature>jaxws-2.2</feature>
+        <feature>jms-2.0</feature>
+        <feature>mdb-3.2</feature>
+        <feature>wasJmsClient-2.0</feature>	
+    </featureManager>
 
      <resourceAdapter id="activemq" location="${server.config.dir}/lib/ActiveMQ/activemq-rar-5.15.3.rar">
          <properties.activemq serverUrl="tcp://localhost:61616"/>
