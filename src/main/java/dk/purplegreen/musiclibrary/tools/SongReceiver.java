@@ -44,14 +44,14 @@ public class SongReceiver implements MessageListener {
 
 				Song song = getSong(songJSON);
 
-				Integer id = songCreator.createSong(song);								
-				
+				Integer id = songCreator.createSong(song);
+
 				if (message.getJMSReplyTo() != null) {
 
 					String corrId = message.getJMSCorrelationID();
-					try (Connection con = cf.createConnection()) {
-						Session session = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
-						MessageProducer producer = session.createProducer(message.getJMSReplyTo());
+					try (Connection con = cf.createConnection();
+							Session session = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
+							MessageProducer producer = session.createProducer(message.getJMSReplyTo())) {
 
 						con.start();
 

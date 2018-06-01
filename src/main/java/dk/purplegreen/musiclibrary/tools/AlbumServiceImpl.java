@@ -44,8 +44,8 @@ public class AlbumServiceImpl implements AlbumService {
 
 			Map<Integer, AlbumType> albums = new HashMap<>();
 
-			try (PreparedStatement stmtSelectAlbums = con.prepareStatement(SELECT_ALBUMS_SQL)) {
-				ResultSet rsAlbums = stmtSelectAlbums.executeQuery();
+			try (PreparedStatement stmtSelectAlbums = con.prepareStatement(SELECT_ALBUMS_SQL);
+					ResultSet rsAlbums = stmtSelectAlbums.executeQuery()) {
 
 				while (rsAlbums.next()) {
 					AlbumType album = new AlbumType();
@@ -58,8 +58,8 @@ public class AlbumServiceImpl implements AlbumService {
 				}
 			}
 
-			try (PreparedStatement stmtSelectSongs = con.prepareStatement(SELECT_SONGS_SQL)) {
-				ResultSet rsSongs = stmtSelectSongs.executeQuery();
+			try (PreparedStatement stmtSelectSongs = con.prepareStatement(SELECT_SONGS_SQL);
+					ResultSet rsSongs = stmtSelectSongs.executeQuery()) {
 
 				while (rsSongs.next()) {
 					SongType song = new SongType();

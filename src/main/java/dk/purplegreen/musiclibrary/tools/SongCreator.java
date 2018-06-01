@@ -61,7 +61,7 @@ public class SongCreator {
 	@Lock(LockType.WRITE)
 	public Integer createSong(@Valid Song song) {
 
-		log.debug("Creating song: " + song);
+		log.debug("Creating song: {}", song);
 
 		Integer result = null;
 
@@ -71,27 +71,30 @@ public class SongCreator {
 			if (artistId == null) {
 				try (PreparedStatement stmtSelectArtist = con.prepareStatement(SELECT_ARTIST_SQL)) {
 					stmtSelectArtist.setString(1, song.getArtist());
-					ResultSet rsSelectArtist = stmtSelectArtist.executeQuery();
-					if (rsSelectArtist.next()) {
-						artistId = rsSelectArtist.getInt("id");
-						artistCache.put(song.getArtist(), artistId);
-						log.debug("Retrieved artist " + song.getArtist() + " from database");
+					try (ResultSet rsSelectArtist = stmtSelectArtist.executeQuery()) {
+						if (rsSelectArtist.next()) {
+							artistId = rsSelectArtist.getInt("id");
+							artistCache.put(song.getArtist(), artistId);
+							log.debug("Retrieved artist {} from database", song.getArtist());
+						}
 					}
 				}
 			} else {
-				log.debug("Retrieved artist " + song.getArtist() + " from cache");
+				log.debug("Retrieved artist {} from cache", song.getArtist());
 			}
+
 			if (artistId == null) {
 				try (PreparedStatement stmtInsertArtist = con.prepareStatement(INSERT_ARTIST_SQL,
 						Statement.RETURN_GENERATED_KEYS)) {
 					stmtInsertArtist.setString(1, song.getArtist());
 
 					stmtInsertArtist.executeUpdate();
-					ResultSet rsInsertArtist = stmtInsertArtist.getGeneratedKeys();
-					if (rsInsertArtist.next()) {
-						artistId = rsInsertArtist.getInt(1);
-						artistCache.put(song.getArtist(), artistId);
-						log.info("Inserted artist " + song.getArtist() + " into database with id: " + artistId);
+					try (ResultSet rsInsertArtist = stmtInsertArtist.getGeneratedKeys()) {
+						if (rsInsertArtist.next()) {
+							artistId = rsInsertArtist.getInt(1);
+							artistCache.put(song.getArtist(), artistId);
+							log.info("Inserted artist {} into database with id: {}", song.getArtist(), artistId);
+						}
 					}
 				}
 			}
@@ -103,15 +106,17 @@ public class SongCreator {
 					stmtSelectAlbum.setInt(1, artistId);
 					stmtSelectAlbum.setString(2, song.getAlbum());
 
-					ResultSet rsSelectAlbum = stmtSelectAlbum.executeQuery();
-					if (rsSelectAlbum.next()) {
-						albumId = rsSelectAlbum.getInt("id");
-						albumCache.put(albumKey, albumId);
+					try (ResultSet rsSelectAlbum = stmtSelectAlbum.executeQuery()) {
+						if (rsSelectAlbum.next()) {
+							albumId = rsSelectAlbum.getInt("id");
+							albumCache.put(albumKey, albumId);
+						}
 					}
 				}
 			} else {
-				log.debug("Retrieved album " + song.getAlbum() + " from cache");
+				log.debug("Retrieved album {} from cache", song.getAlbum());
 			}
+
 			if (albumId == null) {
 				try (PreparedStatement stmtInsertAlbum = con.prepareStatement(INSERT_ALBUM_SQL,
 						Statement.RETURN_GENERATED_KEYS)) {
@@ -120,11 +125,12 @@ public class SongCreator {
 					stmtInsertAlbum.setInt(3, song.getYear());
 
 					stmtInsertAlbum.executeUpdate();
-					ResultSet rsInsertAlbum = stmtInsertAlbum.getGeneratedKeys();
-					if (rsInsertAlbum.next()) {
-						albumId = rsInsertAlbum.getInt(1);
-						albumCache.put(albumKey, albumId);
-						log.info("Inserted album " + song.getAlbum() + " into database with id: " + albumId);
+					try (ResultSet rsInsertAlbum = stmtInsertAlbum.getGeneratedKeys()) {
+						if (rsInsertAlbum.next()) {
+							albumId = rsInsertAlbum.getInt(1);
+							albumCache.put(albumKey, albumId);
+							log.info("Inserted album {} into database with id: {}", song.getAlbum(), albumId);
+						}
 					}
 				}
 			}
@@ -137,10 +143,11 @@ public class SongCreator {
 				stmtInsertSong.setInt(3, song.getTrack());
 				stmtInsertSong.setInt(4, song.getDisc());
 				stmtInsertSong.executeUpdate();
-				ResultSet rsInsertSong = stmtInsertSong.getGeneratedKeys();
-				if (rsInsertSong.next()) {
-					result = rsInsertSong.getInt(1);
-					log.info("Inserted song " + song.getTitle() + " into database with id: " + result);
+				try (ResultSet rsInsertSong = stmtInsertSong.getGeneratedKeys()) {
+					if (rsInsertSong.next()) {
+						result = rsInsertSong.getInt(1);
+						log.info("Inserted song {} into database with id: {}", song.getTitle(), result);
+					}
 				}
 			}
 
