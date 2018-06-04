@@ -54,7 +54,7 @@ public class AlbumServiceImpl implements AlbumService {
 					album.setTitle(rsAlbums.getString("title"));
 					album.setYear(rsAlbums.getInt("yr"));
 					albums.put(rsAlbums.getInt("id"), album);
-					log.debug("Added album: " + album.getTitle());
+					log.debug("Added album: {}", album.getTitle());
 				}
 			}
 
@@ -67,7 +67,7 @@ public class AlbumServiceImpl implements AlbumService {
 					song.setTrack(rsSongs.getInt("track"));
 					song.setDisc(rsSongs.getInt("disc"));
 					albums.get(rsSongs.getInt("album_id")).getSongs().getSong().add(song);
-					log.debug("Added song: " + song.getTitle());
+					log.debug("Added song: {}", song.getTitle());
 				}
 			}
 
