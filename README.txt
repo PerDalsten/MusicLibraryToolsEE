@@ -1,3 +1,12 @@
+Application server versions
+===========================
+
+Websphere Liberty 17.0.0.4
+Wildfly 11.0.0.Final
+Glassfish 4.1.2
+TomEE Plus 7.0.4
+
+
 General configuration
 =====================
 
@@ -182,4 +191,29 @@ Configure ActiveMQ:
 ./asadmin create-connector-resource --poolname jms/ActiveMQConnectionPool jms/ActiveMQConnectionFactory
 
 ./asadmin create-admin-object --raname activemq --restype javax.jms.Queue --property PhysicalName=MUSICLIBRARY.SONG jms/SongQueue
+
+
+TomEE config
+============
+
+Add to conf/tomee.xml
+
+<tomee>
+  <Resource id="activemq" type="ActiveMQResourceAdapter">
+      BrokerXmlConfig =
+      ServerUrl       =  tcp://localhost:61616
+  </Resource>
+
+  <Resource id="jms/ActiveMQConnectionFactory" type="javax.jms.ConnectionFactory">
+      ResourceAdapter = activemq
+  </Resource>
+
+  <Resource id="jms/SongQueue" type="javax.jms.Queue">
+      destination = MUSICLIBRARY.SONG
+  </Resource>    
+
+  <Container id="activemqMDB" ctype="MESSAGE">
+      ResourceAdapter = activemq
+  </Container>
+</tomee>
         
