@@ -6,7 +6,7 @@
 	<groupId>dk.purplegreen.musiclibrary</groupId>
 	<artifactId>MusicLibraryToolsEE</artifactId>
 	<packaging>war</packaging>
-	<version>1.2.4-SNAPSHOT</version>
+	<version>1.2.4</version>
 
 	<name>MusicLibraryToolsEE</name>
 	<url>http://www.purplegreen.dk/musiclibrarytoolsee</url>
