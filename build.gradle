@@ -20,10 +20,10 @@ dependencies {
     compile "org.apache.logging.log4j:log4j-core:${log4jVersion}"
     compile "org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}"
     compile 'javax.cache:cache-api:1.1.0'
-    compile 'org.ehcache:ehcache:3.5.2'
+    compile 'org.ehcache:ehcache:3.6.1'
     
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.18.3"
+    testCompile "org.mockito:mockito-core:2.23.0"
     testCompile "org.apache.derby:derby:10.14.2.0"
 }
 
