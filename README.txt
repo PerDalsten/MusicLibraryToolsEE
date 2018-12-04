@@ -216,4 +216,10 @@ Add to conf/tomee.xml
       ResourceAdapter = activemq
   </Container>
 </tomee>
+
+
+URLs:
+
+WSDL: http://localhost:8080/MusicLibraryToolsEE/AlbumService?wsdl
+
         
